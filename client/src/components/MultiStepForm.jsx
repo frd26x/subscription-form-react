@@ -4,6 +4,11 @@ import SubscriptionParameters from "./SubscriptionParameters";
 import UserData from "./UserData";
 import CreditCardData from "./CreditCardData";
 import Confirmation from "./Confirmation";
+import axios from 'axios'
+const service = axios.create({
+  baseURL: process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:5000/api',
+  withCredentials: false
+})
 
 class MultiStepForm extends Component {
   constructor(props) {
@@ -24,13 +29,13 @@ class MultiStepForm extends Component {
     };
     
   }
-
+ 
   handleToggleCheckbox = (e, input) => {
     this.setState({ [input]: !this.state[input] });
   };
   handleInputChange = e => {
     e.preventDefault();
-    
+
     this.setState({
       [e.target.name]:
         e.target.name === "amountGb" || e.target.name === "duration"
@@ -60,6 +65,43 @@ class MultiStepForm extends Component {
     e.preventDefault();
     this.setState({ step: this.state.step + 1 });
   };
+  confirmSubscription = e => {
+    e.preventDefault()
+    const {
+      duration,
+      amountGb,
+      isPaymentUpfront,
+      lastName,
+      firstName,
+      email,
+      streetAddress,
+      cardNumber,
+      cardExpirationDate,
+      securityCode,
+      areTermsAgreed
+    } = this.state;
+    const subscription = {
+      duration,
+      amountGb,
+      isPaymentUpfront,
+      lastName,
+      firstName,
+      email,
+      streetAddress,
+      cardNumber,
+      cardExpirationDate,
+      securityCode,
+      areTermsAgreed
+    }
+    return service
+    .post('/subscriptions', subscription)
+    .then(res => {
+      // If we have localStorage.getItem('user') saved, the application will consider we are loggedin
+     console.log(res)
+      return res.data
+    })
+    .catch(err=>console.log(err))
+  }
 
   render() {
     const {
@@ -109,6 +151,7 @@ class MultiStepForm extends Component {
           step={this.state.step}
           handleToggleCheckbox={this.handleToggleCheckbox}
           prevStep={this.prevStep}
+          confirmSubscription={this.confirmSubscription}
         />
         <Overview subscriptionParameters={subscriptionParameters} />
       </div>

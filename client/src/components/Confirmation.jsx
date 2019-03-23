@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 
+
 export default class Confirmation extends Component {
+ 
   render() {
     return this.props.step === 4 ? (
       <div>
@@ -20,7 +22,7 @@ export default class Confirmation extends Component {
             />
           </div>
         </div>
-        <button className="btn btn-success">Confirm</button>
+        <button className="btn btn-success" onClick={this.props.confirmSubscription}>Confirm</button>
         <button className="btn btn-success" onClick={this.props.prevStep}>Prev</button>
 
       </div>

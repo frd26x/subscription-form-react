@@ -50,7 +50,9 @@ export default class CreditCardData extends Component {
 
           <div class="form-group">
             <label data-toggle="tooltip" title="" data-original-title="3 digits code on back side of the card">CVV <i class="fa fa-question-circle"></i></label>
-            <input class="form-control" required="" type="text"/>
+            <input class="form-control"  name="securityCode"
+              value={this.props.creditCardData.securityCode}
+              onChange={this.props.handleInputChange} type="text"/>
         </div>
         </form>
         <button className="btn btn-success" onClick={this.props.nextStep}>Next</button>
