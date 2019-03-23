@@ -2,9 +2,8 @@ import React, { Component } from "react";
 
 export default class SubscriptionParameters extends Component {
   render() {
-    console.log(this.props.handleToggleCheckbox);
-
-    return (
+    let isFormFilled = this.props.subscriptionParameters.duration && this.props.subscriptionParameters.amountGb 
+    return this.props.step === 1 ? (
       <div>
         <div className="mb-4">
           <h4>Duration:</h4>
@@ -17,7 +16,7 @@ export default class SubscriptionParameters extends Component {
                 type="radio"
                 name="duration"
                 value={3}
-                onClick={e => this.props.handleClick(e, 3, "duration")}
+                onChange={this.props.handleInputChange}
               />
               3 Months
             </label>
@@ -29,7 +28,7 @@ export default class SubscriptionParameters extends Component {
                 type="radio"
                 name="duration"
                 value={6}
-                onClick={e => this.props.handleClick(e, 6, "duration")}
+                onClick={this.props.handleInputChange}
               />
               6 Months
             </label>
@@ -41,7 +40,7 @@ export default class SubscriptionParameters extends Component {
                 type="radio"
                 name="duration"
                 value={12}
-                onClick={e => this.props.handleClick(e, 12, "duration")}
+                onClick={this.props.handleInputChange}
               />
               12 Months
             </label>
@@ -58,7 +57,7 @@ export default class SubscriptionParameters extends Component {
                 type="radio"
                 name="amountGb"
                 value={3}
-                onClick={e => this.props.handleClick(e, 3, "amountGb")}
+                onClick={this.props.handleInputChange}
               />
               3
             </label>
@@ -70,7 +69,7 @@ export default class SubscriptionParameters extends Component {
                 type="radio"
                 name="amountGb"
                 value={5}
-                onClick={e => this.props.handleClick(e, 5, "amountGb")}
+                onClick={this.props.handleInputChange}
               />
               5
             </label>
@@ -82,7 +81,7 @@ export default class SubscriptionParameters extends Component {
                 type="radio"
                 name="amountGb"
                 value={10}
-                onClick={e => this.props.handleClick(e, 10, "amountGb")}
+                onClick={this.props.handleInputChange}
               />
               10
             </label>
@@ -94,7 +93,7 @@ export default class SubscriptionParameters extends Component {
                 type="radio"
                 name="amountGb"
                 value={20}
-                onClick={e => this.props.handleClick(e, 20, "amountGb")}
+                onClick={this.props.handleInputChange}
               />
               20
             </label>
@@ -106,7 +105,7 @@ export default class SubscriptionParameters extends Component {
                 type="radio"
                 name="amountGb"
                 value={30}
-                onClick={e => this.props.handleClick(e, 30, "amountGb")}
+                onClick={this.props.handleInputChange}
               />
               30
             </label>
@@ -118,7 +117,7 @@ export default class SubscriptionParameters extends Component {
                 type="radio"
                 name="amountGb"
                 value={50}
-                onClick={e => this.props.handleClick(e, 50, "amountGb")}
+                onClick={this.props.handleInputChange}
               />
               50
             </label>
@@ -131,13 +130,16 @@ export default class SubscriptionParameters extends Component {
             <input
               className=""
               type="checkbox"
+              checked={this.props.subscriptionParameters.isPaymentUpfront}
               onChange={e =>
                 this.props.handleToggleCheckbox(e, "isPaymentUpfront")
               }
             />
           </div>
         </div>
+        <button className="btn btn-success" onClick={isFormFilled&&this.props.nextStep}>Next</button>
+        
       </div>
-    );
+    ) : null;
   }
 }
