@@ -8,10 +8,9 @@ const API_PORT = 5000;
 const app = express();
 const router = express.Router();
 
-// this is our MongoDB database
 const uri =
   process.env.MONGODB_URI || `mongodb://localhost/subscription-form-react`;
-// connects our back end code with the database
+
 mongoose
   .connect(uri, { useNewUrlParser: true })
   .then(x => {
@@ -23,8 +22,6 @@ mongoose
     console.error("Error connecting to mongo", err);
   });
 
-// (optional) only made for logging and
-// bodyParser, parses the request body to be a readable json format
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(logger("dev"));
@@ -50,8 +47,6 @@ router.post("/subscriptions", (req, res) => {
     .catch(err => console.log(err));
 });
 
-// append /api for our http requests
 app.use("/api", router);
 
-// launch our backend into a port
 app.listen(API_PORT, () => console.log(`LISTENING ON PORT ${API_PORT}`));

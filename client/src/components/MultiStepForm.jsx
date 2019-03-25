@@ -1,14 +1,7 @@
 import React, { Component } from "react";
-import Overview from "./Overview";
-import SubscriptionParameters from "./SubscriptionParameters";
-import UserData from "./UserData";
-import CreditCardData from "./CreditCardData";
-import Confirmation from "./Confirmation";
-import axios from 'axios'
-const service = axios.create({
-  baseURL: process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:5000/api',
-  withCredentials: false
-})
+import { Overview } from "./Overview";
+import api from "../api";
+import { StepDisplayed } from "./StepDisplayed";
 
 class MultiStepForm extends Component {
   constructor(props) {
@@ -25,13 +18,13 @@ class MultiStepForm extends Component {
       cardExpirationDate: "03/19",
       securityCode: "",
       areTermsAgreed: false,
-      step: 1
+      step: 1,
+      message: ""
     };
-    
   }
- 
-  handleToggleCheckbox = (e, input) => {
-    this.setState({ [input]: !this.state[input] });
+
+  handleToggleCheckbox = e => {
+    this.setState({ [e.target.name]: !this.state[e.target.name] });
   };
   handleInputChange = e => {
     e.preventDefault();
@@ -66,7 +59,7 @@ class MultiStepForm extends Component {
     this.setState({ step: this.state.step + 1 });
   };
   confirmSubscription = e => {
-    e.preventDefault()
+    e.preventDefault();
     const {
       duration,
       amountGb,
@@ -92,16 +85,16 @@ class MultiStepForm extends Component {
       cardExpirationDate,
       securityCode,
       areTermsAgreed
-    }
-    return service
-    .post('/subscriptions', subscription)
-    .then(res => {
-      // If we have localStorage.getItem('user') saved, the application will consider we are loggedin
-     console.log(res)
-      return res.data
-    })
-    .catch(err=>console.log(err))
-  }
+    };
+    api
+      .postSubscription(subscription)
+      .then(res => {
+        console.log(res);
+        this.setState({ message: "you have successfully subscribed!" });
+        return res;
+      })
+      .catch(err => console.log(err));
+  };
 
   render() {
     const {
@@ -115,45 +108,36 @@ class MultiStepForm extends Component {
       cardNumber,
       cardExpirationDate,
       securityCode,
-      areTermsAgreed
+      areTermsAgreed,
+      message
     } = this.state;
     const subscriptionParameters = { duration, amountGb, isPaymentUpfront };
     const userData = { lastName, firstName, email, streetAddress };
-    const creditCardData = { cardNumber, cardExpirationDate, securityCode };
+    const cardData = { cardNumber, cardExpirationDate, securityCode };
     const confirmationData = { areTermsAgreed };
 
     return (
-      <div className="multi-step-form container">
-        <SubscriptionParameters
+      <div className="d-flex justify-content-center bd-highlight mt-2">
+        <StepDisplayed
           handleToggleCheckbox={this.handleToggleCheckbox}
           handleInputChange={this.handleInputChange}
           subscriptionParameters={subscriptionParameters}
           step={this.state.step}
           nextStep={this.nextStep}
-        />
-        <UserData
-          handleInputChange={this.handleInputChange}
+          prevStep={this.prevStep}
           userData={userData}
-          step={this.state.step}
-          nextStep={this.nextStep}
-          prevStep={this.prevStep}
-        />
-        <CreditCardData
           handleSelectChange={this.handleSelectChange}
-          handleInputChange={this.handleInputChange}
-          creditCardData={creditCardData}
-          step={this.state.step}
-          nextStep={this.nextStep}
-          prevStep={this.prevStep}
-        />
-        <Confirmation
-          confirmationData={confirmationData}
-          step={this.state.step}
-          handleToggleCheckbox={this.handleToggleCheckbox}
-          prevStep={this.prevStep}
           confirmSubscription={this.confirmSubscription}
+          cardData={cardData}
+          confirmationData={confirmationData}
         />
-        <Overview subscriptionParameters={subscriptionParameters} />
+
+        <Overview
+          isPaymentUpfront={isPaymentUpfront}
+          amountGb={amountGb}
+          duration={duration}
+          message={message}
+        />
       </div>
     );
   }

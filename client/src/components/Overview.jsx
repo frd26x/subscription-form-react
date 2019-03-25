@@ -1,14 +1,17 @@
-import React, { Component } from 'react'
+import React from "react";
+import { Price, DisplayParameter, Success } from "./OverviewComponents";
 
-export default class Overview extends Component {
-  render() {
-    return (
-      <div>
-        <h4>Monthly  Price</h4> <span>{this.props.subscriptionParameters.isPaymentUpfront?'billed upfront':'billed monthly'}</span>
-        <p className="text-success"> {this.props.subscriptionParameters.isPaymentUpfront?(this.props.subscriptionParameters.amountGb * 2)*0.9:this.props.subscriptionParameters.amountGb * 2} $</p>
-        <h4>Amount GB</h4> 
-        <p className="text-success"> {this.props.subscriptionParameters.amountGb} $</p>
-      </div>
-    )
-  }
+export function Overview({ isPaymentUpfront, amountGb, duration, message }) {
+  return (
+    <div className="container border h-25 p-2 col-3">
+      <Price
+        isPaymentUpfront={isPaymentUpfront}
+        amountGb={amountGb}
+        duration={duration}
+      />
+      <DisplayParameter title="Amount of gb" value={amountGb} />
+      <DisplayParameter title="Duration" value={duration} label="months" />
+      <Success message={message} />
+    </div>
+  );
 }
