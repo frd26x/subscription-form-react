@@ -9,7 +9,8 @@ const subscriptionSchema = new Schema({
   },
   amountGb: {
     type: Number,
-    required: true
+    required: true,
+    enum: [3, 5, 10, 20, 30, 50]
   },
   isPaymentUpfront: {
     type: Boolean,
