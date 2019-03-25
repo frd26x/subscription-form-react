@@ -39,24 +39,25 @@ class MultiStepForm extends Component {
   handleSelectChange = e => {
     e.preventDefault();
     let newExpirationDate = "";
+    let oldExpirationDate =  this.state.cardExpirationDate
     if (e.target.name === "cardExpirationMonth") {
       let cardExpirationMonth = e.target.value;
-      let cardExpirationYear = this.state.cardExpirationDate.substring(2);
+      let cardExpirationYear = oldExpirationDate.substring(2);
       newExpirationDate = cardExpirationMonth + cardExpirationYear;
     } else if (e.target.name === "cardExpirationYear") {
       let cardExpirationYear = e.target.value;
-      let cardExpirationMonth = this.state.cardExpirationDate.substring(0, 3);
+      let cardExpirationMonth = oldExpirationDate.substring(0, 3);
       newExpirationDate = cardExpirationMonth + cardExpirationYear;
     }
     this.setState({ cardExpirationDate: newExpirationDate });
   };
   prevStep = e => {
     e.preventDefault();
-    this.setState({ step: this.state.step - 1 });
+    this.setState(prevState => ({ step: prevState.step - 1 }));
   };
   nextStep = e => {
     e.preventDefault();
-    this.setState({ step: this.state.step + 1 });
+    this.setState(prevState => ({ step: prevState.step + 1 }));
   };
   confirmSubscription = e => {
     e.preventDefault();
